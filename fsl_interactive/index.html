@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FSL Sign Lab | Machine Learning Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">MACHINE LEARNING • CLASSROOM DEMO</p>
+    <h1>FSL Sign Lab</h1>
+    <p class="intro">Record complete moving signs and train a small browser-based sequence classifier.</p>
+    <p class="notice">This prototype learns from <strong>short sequences of movement</strong>, not just a single hand pose. It is an educational demo and will need enough varied examples to work reliably.</p>
+  </header>
+
+  <main>
+    <section class="camera-card">
+      <div class="section-heading">
+        <div><p class="eyebrow">LIVE CAMERA</p><h2>Try a sign</h2></div>
+        <span id="cameraStatus" class="pill">Starting camera…</span>
+      </div>
+      <div class="camera-container">
+        <video id="input_video" autoplay playsinline muted></video>
+        <canvas id="output_canvas"></canvas>
+      </div>
+      <div class="prediction">
+        <span class="eyebrow">MODEL PREDICTION</span>
+        <div id="prediction">Not trained yet</div>
+        <p id="confidence">Train a model after recording examples.</p>
+      </div>
+      <p id="status" role="status">Loading hand tracking…</p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">STEP 1</p>
+      <h2>Create a word label</h2>
+      <p>Enter the word or short phrase you want the model to learn. Use one consistent gesture for each label.</p>
+      <form id="labelForm">
+        <label for="wordInput">Word or phrase</label>
+        <div class="inline-form">
+          <input id="wordInput" maxlength="30" placeholder="e.g. HELP" required>
+          <button type="submit" id="addLabelButton">Add word</button>
+        </div>
+      </form>
+      <div id="labels" class="labels"><span class="muted">No labels added yet.</span></div>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">STEP 2</p>
+      <h2>Record examples</h2>
+      <p>Select a label, perform the entire sign after the countdown, and keep your hands visible until recording finishes. Each example captures 30 consecutive frames.</p>
+      <label for="classSelect">Label to record</label>
+      <select id="classSelect" disabled><option value="">Add a word first</option></select>
+      <div class="button-row">
+        <button id="recordButton" disabled>Record full movement</button>
+        <button id="deleteClassButton" class="secondary" disabled>Delete selected label</button>
+      </div>
+      <p id="recordStatus" class="substatus">Camera must be ready before recording.</p>
+      <div id="sampleSummary" class="summary"></div>
+      <p class="tip">For a useful classroom test, collect 15–30 complete sequences per word and at least two labels. Vary your speed and position slightly. Include a “NONE” label with unrelated movements if you want a rejection category.</p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">STEP 3</p>
+      <h2>Train your model</h2>
+      <p>The browser trains a neural-network classifier on ordered sequences of hand landmarks, so the timing and movement across 30 frames can help distinguish signs.</p>
+      <button id="trainButton" disabled>Train model</button>
+      <button id="resetButton" class="secondary">Clear this device's data</button>
+      <p id="trainingStatus" class="substatus">Add at least two labels and record examples for each.</p>
+    </section>
+
+    <footer>
+      <p>Camera frames and training examples are processed in this browser and saved locally on this device. They are not uploaded by this demo. Use only with permission if recording other people.</p>
+      <p>Educational prototype — not a certified interpreter or emergency communication tool.</p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
